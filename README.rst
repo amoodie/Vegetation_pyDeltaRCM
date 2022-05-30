@@ -2,23 +2,25 @@
 Vegetation in pyDeltaRCM
 ************************
 
-This repository houses an implementation of the "DeltaRCM Vegetation" model from Lauzon and Murray (2018), built on top of `the *pyDeltaRCM* model <https://github.com/DeltaRCM/pyDeltaRCM>`_.
+This repository houses an implementation of the "DeltaRCM Vegetation" model from Lauzon and Murray (2018), built on top of `the pyDeltaRCM model <https://github.com/DeltaRCM/pyDeltaRCM>`_.
 
-With *pyDeltaRCM* installed, simply run `python VegetationModel.py` for a fast-running demonstration of the model.
+With *pyDeltaRCM* installed, simply run ``python VegetationModel.py`` for a fast-running demonstration of the model.
 
-You can modify the code at the bottom of `VegetationModel.py` and/or `vegetation.yaml` to create your own simulations.
+.. figure:: https://raw.githubusercontent.com/amoodie/Vegetation_pyDeltaRCM/main/vegetation_output/simple_movie.gif
 
-Interested in further modifying the `VegetationModel`? Use `hooks` and overwriting as needed, and we suggest adding additional behavior as new methods that are called in the existing sequence.
+You can modify the code at the bottom of ``VegetationModel.py`` and/or ``vegetation.yaml`` to create your own simulations.
+
+Interested in further modifying the ``VegetationModel``? Use ``hooks`` and overwriting as needed, and we suggest adding additional behavior as new methods that are called in the existing sequence.
 
 See:
- * link to multi-behavior example in pyDeltaRCM docs
- * link to examples for hooking in pyDeltaRCM docs
+ * `documentation for using hooks in pyDeltaRCM <https://deltarcm.org/pyDeltaRCM/guides/user_guide.html#customizing-model-operations-with-subclasses-and-hooks>`_
+ * <add link to multi-behavior example in pyDeltaRCM docs>
 
 
 Information
 -----------
 
-For more information about the model implementation, please see the `VegetationModel` docstring in `VegetationModel.py`.
+For more information about the model implementation, please see the ``VegetationModel`` docstring in ``VegetationModel.py`` (`link <https://github.com/amoodie/Vegetation_pyDeltaRCM/blob/main/VegetationModel.py>`_).
 
 For more information on the *pyDeltaRCM* model, and how to further modify
 the `VegetationModel`, please see the `project documentation <https://deltarcm.org/pyDeltaRCM/index.html>`_.
