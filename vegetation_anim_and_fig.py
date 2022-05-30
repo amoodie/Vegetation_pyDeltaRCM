@@ -29,7 +29,8 @@ time_idxs = np.arange(0, data.shape[0]-1)
 cmap, norm = dm.plot.cartographic_colormap(H_SL=0.0, h=4.5, n=1.0)
 
 fig, ax = plt.subplots(
-    gridspec_kw=dict(left=0.05))
+    gridspec_kw=dict(
+        left=0.1, right=0.9))
 im = ax.imshow(
     data['eta'][0, :, :],
     extent=data.extent,
@@ -43,10 +44,11 @@ vegim = ax.imshow(
     cmap='Oranges', vmin=0, vmax=0.2,  # hardcoded max for colorbar at veg_frac = 0.2
     alpha=veg_alpha
     )
-dm.plot.append_colorbar(im, ax=ax, label='elevation [m]')
-dm.plot.append_colorbar(vegim, ax=ax, size=10, label='vegetation frac [-]')
 
-plt.savefig('temp.png')
+cb0 = plt.colorbar(im, shrink=0.45, label='elevation [m]')
+cb1 = plt.colorbar(vegim, shrink=0.45, label='vegetation frac [-]')
+
+plt.savefig(os.path.join(_path_root, 'initial_frame.png'))
 
 anim = animation.FuncAnimation(
     fig, update_field,

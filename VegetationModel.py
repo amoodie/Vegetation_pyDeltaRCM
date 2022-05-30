@@ -213,7 +213,7 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
         This method implements vegetation mortality every timestep.
         """
         # kill all veg that is in locations with bed *change* above root depth
-        self.veg_frac[np.abs(self.eta_change) > self.veg_d_root] = 0
+        self.veg_frac[np.abs(self.eta_change) >= self.veg_d_root] = 0
         
         # kill all veg anywhere the depth is greater than 1 m
         self.veg_frac[self.depth > 1] = 0
@@ -304,8 +304,9 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
             b = ndimage.convolve(self.qs, self.kernel2, mode='constant')
             c = ndimage.convolve(self.qs * self.eta, self.kernel2,
                                  mode='constant')
+            d = ndimage.convolve(self.veg_alpha, self.kernel2, mode='constant')
 
-            self.cf = (self.veg_alpha * self.diffusion_multiplier *
+            self.cf = (d * self.diffusion_multiplier *
                        (self.qs * a - self.eta * b + c))
 
             self.cf[self.cell_type == -2] = 0
