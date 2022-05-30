@@ -29,9 +29,6 @@ the `VegetationModel`, please see the `project documentation <https://deltarcm.o
 References
 ----------
 
-Lauzon, R., & Murray, A. B. (2018). Comparing the cohesive effects 
-    of mud and vegetation on delta evolution. Geophysical Research
-    Letters, 45, 10437–10445. https://doi.org/10.1029/2018GL079405
+* Lauzon, R., & Murray, A. B. (2018). Comparing the cohesive effects of mud and vegetation on delta evolution. Geophysical Research Letters, 45, 10437–10445. https://doi.org/10.1029/2018GL079405
 
-Original source code associated with the paper is archived on Zenodo at
-    `doi: 10.5281/zenodo.1434243 <https://zenodo.org/record/1434243#.W6jxeP5TnKI>`_.
+* Original source code associated with the paper is archived on Zenodo at `doi: 10.5281/zenodo.1434243 <https://zenodo.org/record/1434243#.W6jxeP5TnKI>`_.
