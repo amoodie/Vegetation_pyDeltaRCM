@@ -52,7 +52,7 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
 
     def __init__(self, input_file, **kwargs):
 
-        # requires pyDeltaRCM version where `weight_mod` is 
+        # requires pyDeltaRCM version where `mod_water_weight` is 
         #   implemented as a way to modify water routing.
         assert version.parse(pyDeltaRCM.__version__) >= version.parse("2.1.4")
 
@@ -123,7 +123,7 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
             self._save_fig_list['veg_frac'] = ['veg_frac']
 
         # or add other variables of interest
-        # self._save_fig_list['weight_mod'] = ['weight_mod']
+        # self._save_fig_list['mod_water_weight'] = ['mod_water_weight']
         # self._save_fig_list['veg_alpha'] = ['veg_alpha']
 
         # save the active layer grid each save_dt w/ a short name
@@ -143,8 +143,8 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
 
         self.eta_change = np.zeros_like(self.depth)
 
-        self.veg_est_flood_duration = self.p_veg_est_flood_dur * sec_in_day # duration of flooding
-        self.veg_est_interflood_duration = self.p_veg_est_inter_dur * sec_in_day # time for veg growth
+        self.veg_est_flood_duration = self.p_veg_est_flood_dur * sec_in_day  # duration of flooding
+        self.veg_est_interflood_duration = self.p_veg_est_inter_dur * sec_in_day  # time for veg growth
         self.veg_est_depth = self.p_veg_est_depth
         self.veg_est_roc = self.p_veg_est_roc
         self.veg_est_init = self.p_veg_est_init
@@ -156,8 +156,8 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
         # what is this thing?
         #  "coefficient to make vegetation have proper influence"
         self.veg_A = (0.88 * 4 / 
-            (np.pi * self.veg_d_stem**2 * self.veg_K * 
-                ((4 / self.veg_d_stem / self.veg_K) - self.veg_b)))
+                      (np.pi * self.veg_d_stem**2 * self.veg_K * 
+                       ((4 / self.veg_d_stem / self.veg_K) - self.veg_b)))
 
     def hook_run_water_iteration(self):
         """Update vegetation parameters before the water routing.
@@ -169,18 +169,18 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
 
         # This is the part that adds weighting to water routing based on
         # vegetation. The idea is that vegetation slows down flow by
-        # increasing roughness. We use the self.weight_mod to
+        # increasing roughness. We use the self.mod_water_weight to
         # represent this change in flow resistence.
         # First, determine what the weights would be everywhere
         _part1 = (
             self.veg_A * np.pi * self.veg_d_stem**2 * 
             self.veg_K * (self.veg_frac - self.veg_b))
-        _weight_mod = (1 - (_part1 / 4))
+        _mod_water_weight = (1 - (_part1 / 4))
         # Then, we modulate the weights wherever the veg_frac is above threshold
         #    reset everything to 1 (no weight), then update where veg above threshold
-        self.weight_mod[:] = 1
-        self.weight_mod[self.veg_frac >= self.veg_b] = _weight_mod[self.veg_frac >= self.veg_b]
-        self.weight_mod = np.clip(self.weight_mod, 0, 1)
+        self.mod_water_weight[:] = 1
+        self.mod_water_weight[self.veg_frac >= self.veg_b] = _mod_water_weight[self.veg_frac >= self.veg_b]
+        self.mod_water_weight = np.clip(self.mod_water_weight, 0, 1)
 
     def hook_after_route_sediment(self):
         """Apply vegetation growth/death rules.
@@ -280,9 +280,12 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
         #  at these locations, establish with the initial vegetation parameter
         self.veg_frac[_where_valid] = self.veg_est_init
 
-        # calculate the change in vegeation everywhere there is already vegeation
+        # calculate the change in vegeation everywhere already vegetation
         #   note: this includes the newly established vegetation
-        dveg_frac = self.veg_est_interflood_duration * (1-(self.veg_frac)) * self.veg_r * self.veg_frac #vegetation grows for length of an interflood period
+        #   note: vegetation grows for length of an interflood period
+        dveg_frac = (
+            self.veg_est_interflood_duration *
+            (1-(self.veg_frac)) * self.veg_r * self.veg_frac)
         self.veg_frac = self.veg_frac + dveg_frac
         
         # update sea level rise during interflood time
@@ -296,7 +299,8 @@ class VegetationModel(pyDeltaRCM.DeltaModel):
     
         This method takes care of the "bank stability" change to the model.
         Here, we simply multiply the `qs_lat` and `S` calculated from kernels
-        with the `veg_alpha` coefficient field to determine topographic diffusion.
+        with the `veg_alpha` coefficient field to determine topographic
+        diffusion.
         """
         for _ in range(self.N_crossdiff):
 
